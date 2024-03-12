@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Autor_1 = require("./entities/Autor");
+const Biblioteca_1 = require("./entities/Biblioteca");
+const LibroImpreso_1 = require("./entities/LibroImpreso");
+const juan = new Autor_1.Autor("juan", "perez");
+const pedro = new Autor_1.Autor("pedro", "gutierrez");
+const libro1 = new LibroImpreso_1.LibroImpreso("el señor de anillos", juan);
+const libro2 = new LibroImpreso_1.LibroImpreso("el zapato roto", pedro);
+const biblioteca = new Biblioteca_1.Biblioteca();
+biblioteca.agregarLibro(libro1);
+biblioteca.agregarLibro(libro2);
+biblioteca.mostrarCatalogo();
