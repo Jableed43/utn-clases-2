@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Editar Alumno</h1>
+
+    <!-- Buscar alumno -->
+    <h2>Buscar el alumno por id</h2>
+    <form id="searchForm">
+        <label for="idAlumno">Id del alumno</label>
+        <input type="text" id="idAlumno" name="idAlumno" required>
+        <button type="submit" onclick="buscarAlumnoPorId(event)">Buscar Alumno</button>
+    </form>
+
+    <!-- Mostrar datos alumno y formulario para editar -->
+    <div id="alumno-info">
+
+        <h2>Informacion del alumno</h2>
+
+        <form id="editForm">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre">
+            <label for="apellido">Apellido</label>
+            <input type="text" id="apellido" name="apellido">
+            <button type="submit">Guardar Cambios</button>
+        </form>
+    </div>
+
+    <script>
+        async function buscarAlumnoPorId(event) {
+            event.preventDefault()
+            //traemos id del alumno desde el input
+            const idAlumno = Number(document.getElementById('idAlumno').value)
+            //hacemos consulta al servidor con el id del alumno
+            const response = await fetch(`/buscar-alumno?idAlumno=${idAlumno}`)
+console.log(idAlumno)
+            //si la respuesta es ok, entonces guardamos los datos en data
+            if(response.ok){
+                const data = await response.json()
+
+                //si la data llega entonces relleno los campos con la info
+                if(data.length > 0){
+                    document.getElementById('nombre').value = data[0].nombre;
+                    document.getElementById('apellido').value = data[0].apellido;
+                } else {
+                    alert("No se encontro el alumno")
+                }
+            } else {
+                alert("Error al buscar alumno")
+            }
+        }
+    </script>
+
+</body>
+</html>
