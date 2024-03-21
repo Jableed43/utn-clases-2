@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Alumno</title>
+</head>
+<body>
+    <nav>
+        <ul>
+          <li><a href="/">Crear Alumno</a></li>
+          <li><a href="/editar">Editar Alumnos</a></li>
+          <li><a href="/listar">Listar Alumnos</a></li>
+          <li><a href="/buscar">Buscar Alumno</a></li>
+          <li><a href="/eliminar">Eliminar Alumno</a></li>
+        </ul>
+      </nav>
+  <h1>Editar Alumno</h1>
+
+  <!-- Parte 1: Buscar alumno por ID -->
+  <h2>Buscar Alumno por ID</h2>
+  <form id="searchForm">
+    <label for="idAlumno">ID del Alumno:</label>
+    <input type="text" id="idAlumno" name="idAlumno" required><br><br>
+    <button type="button" onclick="buscarAlumnoPorId()">Buscar Alumno</button>
+  </form>
+
+  <!-- Parte 2: Mostrar datos del alumno y formulario para editar -->
+  <div id="alumno-info" style="display: none;">
+    <h2>Información del Alumno</h2>
+    <form id="editForm">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" required><br><br>
+      <label for="apellido">Apellido:</label>
+      <input type="text" id="apellido" name="apellido" required><br><br>
+      <button type="submit">Guardar Cambios</button>
+    </form>
+  </div>
+
+  <script>
+    // Función para buscar al alumno por ID
+    async function buscarAlumnoPorId() {
+      const idAlumno = Number(document.getElementById('idAlumno').value);
+      const response = await fetch(`/buscar-alumno?idAlumno=${idAlumno}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.length > 0) {
+          // Rellenar los campos del formulario con los datos del alumno
+          document.getElementById('nombre').value = data[0].nombre;
+          document.getElementById('apellido').value = data[0].apellido;
+          // Mostrar la parte de editar alumno
+          document.getElementById('alumno-info').style.display = 'block';
+        } else {
+          alert("No se encontró ningún alumno con el ID proporcionado.");
+        }
+      } else {
+        alert("Error al buscar alumno");
+      }
+    }
+
+    // Función para enviar el formulario de edición de alumno
+    async function editarAlumno(event) {
+      event.preventDefault(); // Evitar que se envíe el formulario normalmente
+      const idAlumno = Number(document.getElementById('idAlumno').value);
+      const nombre = document.getElementById('nombre').value;
+      const apellido = document.getElementById('apellido').value;
+
+      const response = await fetch(`/editar-alumno?idAlumno=${idAlumno}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ nombre, apellido })
+      });
+
+      if (response.ok) {
+        alert("Alumno editado correctamente");
+        // Limpiar los campos del formulario
+        document.getElementById('nombre').value = "";
+        document.getElementById('apellido').value = "";
+        // Ocultar la parte de editar alumno
+        document.getElementById('alumno-info').style.display = 'none';
+      } else {
+        alert("Error al editar alumno");
+      }
+    }
+
+    // Agregar el evento submit al formulario de edición
+    document.getElementById('editForm').addEventListener('submit', editarAlumno);
+  </script>
+</body>
+</html>

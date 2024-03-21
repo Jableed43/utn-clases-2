@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <nav>
+    <ul>
+      <li><a href="/">Crear Alumno</a></li>
+      <li><a href="/editar">Editar Alumnos</a></li>
+      <li><a href="/listar">Listar Alumnos</a></li>
+      <li><a href="/buscar">Buscar Alumno</a></li>
+      <li><a href="/eliminar">Eliminar Alumno</a></li>
+    </ul>
+  </nav>
+  <title>Eliminar Alumno</title>
+</head>
+<body>
+  <h1>Eliminar Alumno</h1>
+  <form id="deleteForm">
+    <label for="idAlumno">ID del Alumno a eliminar:</label>
+    <input type="text" id="idAlumno" name="idAlumno" required><br><br>
+    <button type="submit">Eliminar Alumno</button>
+  </form>
+
+  <script>
+    async function eliminarAlumno() {
+      const idAlumno = Number(document.getElementById('idAlumno').value);
+      const response = await fetch(`/eliminar-alumno?idAlumno=${idAlumno}`, { method: 'DELETE' });
+
+      if (response.ok) {
+        alert("Alumno eliminado correctamente");
+        document.getElementById('idAlumno').value = ""; // Limpiar el campo de ID
+      } else {
+        alert("Error al eliminar alumno");
+      }
+    }
+
+    document.getElementById('deleteForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Evitar que se envíe el formulario normalmente
+      eliminarAlumno(); // Llamar a la función para eliminar al alumno
+    });
+  </script>
+</body>
+</html>

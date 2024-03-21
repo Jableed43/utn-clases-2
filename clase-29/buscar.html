@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <nav>
+    <ul>
+      <li><a href="/">Crear Alumno</a></li>
+      <li><a href="/editar">Editar Alumnos</a></li>
+      <li><a href="/listar">Listar Alumnos</a></li>
+      <li><a href="/buscar">Buscar Alumno</a></li>
+      <li><a href="/eliminar">Eliminar Alumno</a></li>
+    </ul>
+  </nav>
+  <title>Buscar Alumno</title>
+</head>
+<body>
+  <h1>Buscar Alumno</h1>
+  <form id="searchForm" action="/buscar-alumno" method="get">
+    <label for="idAlumno">ID del Alumno:</label>
+    <input type="text" id="idAlumno" name="idAlumno" required><br><br>
+    <button type="submit">Buscar</button>
+  </form>
+  <div id="alumno-encontrado">
+    <!-- Aquí se mostrará dinámicamente la información del alumno -->
+  </div>
+
+  <script>
+    // Función para buscar al alumno
+    async function buscarAlumno() {
+      const idAlumno = Number(document.getElementById('idAlumno').value);
+      const response = await fetch(`/buscar-alumno?idAlumno=${idAlumno}`);
+      const data = await response.json();
+
+      // Actualizar el div con la información del alumno encontrado
+      const alumnoEncontradoDiv = document.getElementById('alumno-encontrado');
+      if (data.length > 0) {
+        alumnoEncontradoDiv.innerHTML = `
+          <h2>Información del Alumno</h2>
+          <p><strong>ID:</strong> ${data[0].idalumnos}</p>
+          <p><strong>Nombre:</strong> ${data[0].nombre}</p>
+          <p><strong>Apellido:</strong> ${data[0].apellido}</p>
+        `;
+      } else {
+        alumnoEncontradoDiv.innerHTML = "<p>Alumno no encontrado.</p>";
+      }
+    }
+
+    // Llamar a la función buscarAlumno cuando se envíe el formulario
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Evitar que se envíe el formulario normalmente
+      buscarAlumno(); // Llamar a la función de búsqueda
+    });
+  </script>
+</body>
+</html>
+

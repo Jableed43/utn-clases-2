@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <nav>
+    <ul>
+      <li><a href="/">Crear Alumno</a></li>
+      <li><a href="/editar">Editar Alumnos</a></li>
+      <li><a href="/listar">Listar Alumnos</a></li>
+      <li><a href="/buscar">Buscar Alumno</a></li>
+      <li><a href="/eliminar">Eliminar Alumno</a></li>
+    </ul>
+  </nav>
+  <title>Listar Alumnos</title>
+</head>
+<body>
+  <h1>Listar Alumnos</h1>
+  <button onclick="obtenerAlumnos()">Listar Alumnos</button>
+  <div id="alumnos-list">
+    <!-- Aquí se mostrará dinámicamente la lista de alumnos -->
+  </div>
+
+  <script>
+    // Función para obtener la lista de alumnos
+    async function obtenerAlumnos() {
+      const response = await fetch('/listar-alumnos');
+      const data = await response.json();
+
+      // Actualizar el div con la lista de alumnos
+      const alumnosListDiv = document.getElementById('alumnos-list');
+      if (data.length > 0) {
+        alumnosListDiv.innerHTML = '<h2>Lista de Alumnos</h2>';
+        data.forEach(alumno => {
+          alumnosListDiv.innerHTML += `
+            <p><strong>ID:</strong> ${alumno.idalumnos}</p>
+            <p><strong>Nombre:</strong> ${alumno.nombre}</p>
+            <p><strong>Apellido:</strong> ${alumno.apellido}</p>
+            <hr>
+          `;
+        });
+      } else {
+        alumnosListDiv.innerHTML = "<p>No hay alumnos registrados.</p>";
+      }
+    }
+  </script>
+</body>
+</html>
