@@ -56,6 +56,21 @@ app.get("/buscar-alumno", async (req, res) => {
   }
 });
 
+app.put("/editar-alumno", async (req, res) => {
+  const { idAlumno } = req.query;
+  const { nombre, apellido } = req.body;
+
+  try {
+    const updateQuery =
+      "UPDATE alumnos SET nombre = ? , apellido = ? WHERE idalumnos = ?";
+
+    await pool.query(updateQuery, [nombre, apellido, idAlumno]);
+    res.send("Alumno editado correctamente");
+  } catch (error) {
+    console.error("Error al editar", error);
+  }
+});
+
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });

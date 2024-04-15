@@ -32,12 +32,12 @@
 
     <script>
         async function buscarAlumnoPorId(event) {
+            //evitar enviar formulario de forma convencional
             event.preventDefault()
             //traemos id del alumno desde el input
             const idAlumno = Number(document.getElementById('idAlumno').value)
             //hacemos consulta al servidor con el id del alumno
             const response = await fetch(`/buscar-alumno?idAlumno=${idAlumno}`)
-console.log(idAlumno)
             //si la respuesta es ok, entonces guardamos los datos en data
             if(response.ok){
                 const data = await response.json()
@@ -53,6 +53,27 @@ console.log(idAlumno)
                 alert("Error al buscar alumno")
             }
         }
+
+        async function editarAlumno(event){
+            event.preventDefault()
+            const idAlumno = Number(document.getElementById('idAlumno').value)
+            const nombre = document.getElementById('nombre').value
+            const apellido = document.getElementById('apellido').value
+            console.log(idAlumno, nombre, apellido)
+            const respuesta = await fetch(`/editar-alumno?idAlumno=${idAlumno}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({nombre, apellido})
+            })
+            if(respuesta.ok){
+                alert("Alumno editado correctamente")
+            } else {
+                alert("Error al editar alumno")
+            }
+        }
+        document.getElementById('editForm').addEventListener('submit', editarAlumno)
     </script>
 
 </body>
