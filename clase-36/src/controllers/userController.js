@@ -17,9 +17,10 @@ export const create = async (req, res) => {
     // guardar el usuario
     const savedUser = await userData.save();
     // mostrar informacion del usuario guardado
-    res.status(200).json(savedUser);
+    const { password, ...rest } = savedUser;
+    res.status(200).json(rest);
   } catch (error) {
-    res.status(500).json({ error: "internal server error" });
+    res.status(500).json({ message: "internal server error", error });
   }
 };
 
@@ -27,7 +28,7 @@ export const get = async (req, res) => {
   try {
     const users = await User.find();
     if (users.length === 0) {
-      return res.status(404).json({ messaje: "There are no users" });
+      return res.status(404).json({ message: "There are no users" });
     }
     res.status(200).json(users);
   } catch (error) {
@@ -43,7 +44,7 @@ export const update = async (req, res) => {
     const userExist = await User.findOne({ _id: id });
     console.log(req.params.id);
     if (!userExist) {
-      return res.status(404).json({ messaje: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
     //actualizamos datos de usuario
     const updateUser = await User.findByIdAndUpdate({ _id: id }, req.body, {
