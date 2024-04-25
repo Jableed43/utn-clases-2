@@ -1,10 +1,10 @@
 import User from "../models/userModel.js";
+import bcrypt from "bcrypt";
 
 export const create = async (req, res) => {
   try {
     // tomar datos de body (post)
     const userData = new User(req.body);
-
     // buscar si existe usuario (filtrar por email)
     //destructuracion
     const { email } = userData;
@@ -67,5 +67,27 @@ export const deleteUser = async (req, res) => {
     res.status(201).json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: "internal server error" });
+  }
+};
+
+export const validate = async (req, res) => {
+  try {
+    const userFound = await User.findOne({ email: req.body.email });
+    if (!userFound) {
+      res
+        .status(400)
+        .json({ message: "El email y/o la contraseña son incorrectos" });
+    }
+    //La contraseña que llega de body la encriptamos y la comparamos contra la guardada
+    if (bcrypt.compareSync(req.body.password, userFound.password)) {
+      res.status(200).json({ message: "Valid Login" });
+    } else {
+      res
+        .status(400)
+        .json({ message: "El email y/o contraseña son incorrectos" });
+      return;
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
   }
 };
