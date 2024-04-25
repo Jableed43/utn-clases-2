@@ -2,7 +2,7 @@ import Product from "../models/productModel.js";
 
 export const getAll = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate("category");
     if (products.length === 0) {
       return res.status(404).json({ message: "There are no products" });
     }

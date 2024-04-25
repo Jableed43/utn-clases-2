@@ -36,7 +36,7 @@ const productSchema = new mongoose.Schema({
       message: props => `${props.value} no es un estado valido`,
     },
   },
-  category: String,
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "category" },
   destacado: Boolean,
 });
 
