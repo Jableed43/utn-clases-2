@@ -6,15 +6,16 @@ import {
   deleteUser,
   validate,
 } from "../controllers/userController.js";
+import { verifyTokenMiddleware } from "../middlewares/verifyTokenMiddleware.js";
 
 const userRoute = express.Router();
 
 //endpoints
 userRoute.post("/create", create);
-userRoute.get("/getAll", get);
+userRoute.get("/getAll", verifyTokenMiddleware, get);
 // /:id -> req.param.id
-userRoute.put("/update/:id", update);
-userRoute.delete("/deleteUser/:id", deleteUser);
+userRoute.put("/update/:id", verifyTokenMiddleware, update);
+userRoute.delete("/deleteUser/:id", verifyTokenMiddleware, deleteUser);
 userRoute.post("/login", validate);
 
 export default userRoute;

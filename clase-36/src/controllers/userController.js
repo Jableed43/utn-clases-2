@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const create = async (req, res) => {
   try {
@@ -73,6 +74,7 @@ export const deleteUser = async (req, res) => {
 export const validate = async (req, res) => {
   try {
     const userFound = await User.findOne({ email: req.body.email });
+    console.log(userFound);
     if (!userFound) {
       res
         .status(400)
@@ -80,7 +82,14 @@ export const validate = async (req, res) => {
     }
     //La contraseña que llega de body la encriptamos y la comparamos contra la guardada
     if (bcrypt.compareSync(req.body.password, userFound.password)) {
-      res.status(200).json({ message: "Valid Login" });
+      //payload, secreto, tiempo de expiracion
+      const payload = {
+        userId: userFound._id,
+        userEmail: userFound.email,
+      };
+      //firmar token
+      const token = jwt.sign(payload, "secreto", { expiresIn: "1h" });
+      res.status(200).json({ token });
     } else {
       res
         .status(400)
