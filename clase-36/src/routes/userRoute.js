@@ -5,6 +5,8 @@ import {
   update,
   deleteUser,
   validate,
+  updateView,
+  loginView,
 } from "../controllers/userController.js";
 import { verifyTokenMiddleware } from "../middlewares/verifyTokenMiddleware.js";
 
@@ -17,8 +19,10 @@ userRoute.get("/create", (req, res) => {
 });
 userRoute.get("/getAll", verifyTokenMiddleware, get);
 // /:id -> req.param.id
-userRoute.put("/update/:id", verifyTokenMiddleware, update);
-userRoute.delete("/deleteUser/:id", verifyTokenMiddleware, deleteUser);
+userRoute.get("/update/:id", updateView);
+userRoute.put("/update/:id", update);
+userRoute.delete("/deleteUser/:id", deleteUser);
+userRoute.get("/login", loginView);
 userRoute.post("/login", validate);
 
 export default userRoute;

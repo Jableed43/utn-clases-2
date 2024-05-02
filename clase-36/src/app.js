@@ -6,10 +6,20 @@ import userRoute from "./routes/userRoute.js";
 import productRoute from "./routes/productRoute.js";
 import categoryRoute from "./routes/categoryRoute.js";
 import { engine } from "express-handlebars";
+import methodOverride from "method-override";
+import session from "express-session";
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
+app.use(
+  session({
+    secret: "secreto",
+    resave: false, // Evita que la sesión se vuelva a guardar si no hay cambios
+    saveUninitialized: false, // Evita que se guarde una sesión no inicializada
+  })
+);
 
 //Template engine
 app.engine("handlebars", engine());

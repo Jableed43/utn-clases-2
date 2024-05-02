@@ -27,11 +27,13 @@ export const create = async (req, res) => {
 
 export const get = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().lean();
+    //lean sive para pasar de mongoose document a plain object
     if (users.length === 0) {
       return res.status(404).json({ message: "There are no users" });
     }
-    res.status(200).json(users);
+    // res.status(200).json(users);
+    res.render("getAll", { users: users });
   } catch (error) {
     res.status(500).json({ error: "internal server error" });
   }
@@ -39,11 +41,11 @@ export const get = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
+    console.log(req.body);
     //saber que vamos a actualizar con un identificador unico
     const id = req.params.id;
     //saber si existe la entidad a actualizar
     const userExist = await User.findOne({ _id: id });
-    console.log(req.params.id);
     if (!userExist) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -51,7 +53,8 @@ export const update = async (req, res) => {
     const updateUser = await User.findByIdAndUpdate({ _id: id }, req.body, {
       new: true,
     });
-    res.status(201).json(updateUser);
+    // res.status(201).json(updateUser);
+    res.redirect("/api/user/getAll");
   } catch (error) {
     res.status(500).json({ error: "internal server error" });
   }
@@ -65,7 +68,8 @@ export const deleteUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     await User.findByIdAndDelete(_id);
-    res.status(201).json({ message: "User deleted successfully" });
+    // res.status(201).json({ message: "User deleted successfully" });
+    res.redirect("/api/user/getAll");
   } catch (error) {
     res.status(500).json({ error: "internal server error" });
   }
@@ -74,7 +78,6 @@ export const deleteUser = async (req, res) => {
 export const validate = async (req, res) => {
   try {
     const userFound = await User.findOne({ email: req.body.email });
-    console.log(userFound);
     if (!userFound) {
       res
         .status(400)
@@ -89,7 +92,9 @@ export const validate = async (req, res) => {
       };
       //firmar token
       const token = jwt.sign(payload, "secreto", { expiresIn: "1h" });
-      res.status(200).json({ token });
+      req.session.token = token;
+      // res.status(200).json({ token });
+      res.redirect("/api/user/getAll");
     } else {
       res
         .status(400)
@@ -97,6 +102,19 @@ export const validate = async (req, res) => {
       return;
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error", error: error });
   }
+};
+
+export const updateView = async (req, res) => {
+  const _id = req.params.id;
+  const userFound = await User.findOne({ _id }).lean();
+  if (!userFound) {
+    console.log("error");
+  }
+  res.render("update", { user: userFound });
+};
+
+export const loginView = (req, res) => {
+  res.render("login");
 };
