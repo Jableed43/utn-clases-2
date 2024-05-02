@@ -5,9 +5,16 @@ import { PORT } from "./config.js";
 import userRoute from "./routes/userRoute.js";
 import productRoute from "./routes/productRoute.js";
 import categoryRoute from "./routes/categoryRoute.js";
+import { engine } from "express-handlebars";
 
 const app = express();
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+//Template engine
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
+app.set("views", "./src/views");
 
 // Conexión a la base de datos
 connectDB();
@@ -15,7 +22,7 @@ connectDB();
 // Rutas de la aplicación
 //ruta base
 app.get("/", (req, res) => {
-  res.send("hello world");
+  res.render("home");
 });
 
 //rutas de usuario
