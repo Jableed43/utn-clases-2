@@ -1,0 +1,17 @@
+<h2>{{titulo}}</h2>
+<form action="/api/user/update/{{user._id}}?_method=put" method="post">
+
+    <label for="nombre">Nombre</label>
+    <input type="text" id="nombre" name="nombre" value="{{ user.nombre }}">
+    <br>
+    <label for="apellido">Apellido</label>
+    <input type="text" id="apellido" name="apellido" value="{{ user.apellido }}">
+    <br>
+    <label for="email">Email</label>
+    <input type="text" id="email" name="email" value="{{ user.email }}">
+    <br>
+    <label for="carrera">Carrera</label>
+    <input type="text" id="carrera" name="carrera" value="{{ user.carrera }}">
+    <br>
+    <button type="submit">Enviar</button>
+</form>

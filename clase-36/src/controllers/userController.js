@@ -16,10 +16,8 @@ export const create = async (req, res) => {
         .json({ message: `User with email: ${email} already exist` });
     }
     // guardar el usuario
-    const savedUser = await userData.save();
-    // mostrar informacion del usuario guardado
-    const { password, ...rest } = savedUser;
-    res.status(200).json(rest);
+    await userData.save();
+    res.render("home");
   } catch (error) {
     res.status(500).json({ message: "internal server error", error });
   }
@@ -27,11 +25,12 @@ export const create = async (req, res) => {
 
 export const get = async (req, res) => {
   try {
-    const users = await User.find();
+    //user.find trae un mongoose document, con lean se pasa a objeto
+    const users = await User.find().lean();
     if (users.length === 0) {
       return res.status(404).json({ message: "There are no users" });
     }
-    res.status(200).json(users);
+    res.render("getAll", { users: users, titulo: "Todos los usuarios" });
   } catch (error) {
     res.status(500).json({ error: "internal server error" });
   }
@@ -48,10 +47,10 @@ export const update = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     //actualizamos datos de usuario
-    const updateUser = await User.findByIdAndUpdate({ _id: id }, req.body, {
+    await User.findByIdAndUpdate({ _id: id }, req.body, {
       new: true,
     });
-    res.status(201).json(updateUser);
+    res.redirect("/api/user/getAll");
   } catch (error) {
     res.status(500).json({ error: "internal server error" });
   }
@@ -65,7 +64,7 @@ export const deleteUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     await User.findByIdAndDelete(_id);
-    res.status(201).json({ message: "User deleted successfully" });
+    res.redirect("/api/user/getAll");
   } catch (error) {
     res.status(500).json({ error: "internal server error" });
   }
@@ -89,7 +88,9 @@ export const validate = async (req, res) => {
       };
       //firmar token
       const token = jwt.sign(payload, "secreto", { expiresIn: "1h" });
-      res.status(200).json({ token });
+      req.session.token = token;
+      console.log(req.session.token);
+      res.redirect("/api/user/getAll");
     } else {
       res
         .status(400)
@@ -99,4 +100,30 @@ export const validate = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
+};
+
+export const updateView = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const userFound = await User.findOne({ _id }).lean();
+    if (!userFound) {
+      console.log("error");
+    }
+    res.render("update", { user: userFound });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const loginView = (req, res) => {
+  res.render("login");
+};
+
+export const destroySession = (req, res) => {
+  req.session.destroy(error => {
+    if (error) {
+      console.log("error al destruir sesion");
+    }
+    res.redirect("/api/user/login");
+  });
 };

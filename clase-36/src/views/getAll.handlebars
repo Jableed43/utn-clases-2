@@ -1,0 +1,15 @@
+<h2>{{titulo}}</h2>
+<form action="/api/user/logout" method="post">
+<button type="submit">Cerrar sesion</button>
+</form>
+<ul>
+    {{#each users}}
+    <li> {{nombre}} - {{email}} - {{carrera}}
+        <form action="/api/user/update/{{_id}}" method="get">
+            <button type="submit">Editar</button>
+        </form>
+        <form action="/api/user/deleteUser/{{_id}}?_method=delete" method="post">
+        <button type="submit">Eliminar</button></form>
+    </li>
+    {{/each}}
+</ul>
