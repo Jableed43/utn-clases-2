@@ -12,9 +12,6 @@ const userRoute = express.Router();
 
 //endpoints
 userRoute.post("/create", create);
-userRoute.get("/create", (req, res) => {
-  res.render("create");
-});
 userRoute.get("/getAll", verifyTokenMiddleware, get);
 // /:id -> req.param.id
 userRoute.put("/update/:id", verifyTokenMiddleware, update);
