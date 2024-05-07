@@ -2,11 +2,15 @@ import Product from "../models/productModel.js";
 
 export const getAll = async (req, res) => {
   try {
-    const products = await Product.find().populate("category");
+    const products = await Product.find().populate("category").lean();
     if (products.length === 0) {
       return res.status(404).json({ message: "There are no products" });
     }
-    res.status(200).json(products);
+    const productsWithCategory = products.map(product => ({
+      ...product,
+      categoryName: product.category ? product.category.name : "Sin categoria",
+    }));
+    res.render("product/getAll", { products: productsWithCategory });
   } catch (error) {
     res.status(500).json({ message: "internal server error", error });
   }
@@ -14,14 +18,18 @@ export const getAll = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const productData = new Product(req.body);
+    let destacado = req.body.destacado;
+    console.log(destacado);
+    destacado = destacado === "true";
+    const productDestacado = { destacado, ...req.body };
+    const productData = new Product(productDestacado);
     const { name } = productData;
     const productExist = await Product.findOne({ name });
     if (productExist) {
       return res.status(400).json({ message: `Product ${name} already exist` });
     }
     const savedProduct = await productData.save();
-    res.status(200).json(savedProduct);
+    res.redirect("/api/product/getAll");
   } catch (error) {
     res.status(500).json({ message: "internal server error", error });
   }
@@ -49,12 +57,21 @@ export const update = async (req, res) => {
     if (!productExist) {
       return res.status(404).json({ message: "User not found" });
     }
-    const updateProduct = await Product.findByIdAndUpdate(
-      { _id: id },
-      req.body,
-      { new: true }
-    );
-    res.status(201).json(updateProduct);
+    await Product.findByIdAndUpdate({ _id: id }, req.body, { new: true });
+    res.redirect("/api/product/getAll");
+  } catch (error) {
+    res.status(500).json({ message: "internal server error", error });
+  }
+};
+
+export const updateView = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const productExist = await Product.findOne({ _id: id }).lean();
+    if (!productExist) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.render("product/updateProduct", { product: productExist });
   } catch (error) {
     res.status(500).json({ message: "internal server error", error });
   }
@@ -68,8 +85,12 @@ export const deleteProduct = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
     await Product.findByIdAndDelete(id);
-    res.status(201).json({ message: "Product deleted successfully" });
+    res.redirect("/api/product/getAll");
   } catch (error) {
     res.status(500).json({ message: "internal server error", error });
   }
+};
+
+export const createView = (req, res) => {
+  res.render("product/createProduct");
 };

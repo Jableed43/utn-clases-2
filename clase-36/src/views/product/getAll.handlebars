@@ -1,0 +1,19 @@
+<h2>{{titulo}}</h2>
+</form>
+<ul>
+    {{#each products}}
+    <li> {{name}} - {{price}} - {{quantity}} - {{status}} - {{categoryName}} - {{description}} - 
+        {{#if destacado}}
+        <p>Producto destacado</p>
+        {{else}}
+        <p>Producto no destacado</p>
+        {{/if}}
+
+        <form action="/api/product/update/{{_id}}" method="get">
+            <button type="submit">Editar</button>
+        </form>
+        <form action="/api/product/delete/{{_id}}?_method=delete" method="post">
+        <button type="submit">Eliminar</button></form>
+    </li>
+    {{/each}}
+</ul>

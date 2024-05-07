@@ -27,6 +27,6 @@ userRoute.get("/create", (req, res) => {
 });
 userRoute.get("/getAll", verifyTokenMiddleware, get);
 userRoute.get("/update/:id", updateView);
-userRoute.get("/login", loginView);
+// userRoute.get("/login", loginView);
 
 export default userRoute;

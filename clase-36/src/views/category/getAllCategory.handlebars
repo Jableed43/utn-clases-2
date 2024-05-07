@@ -1,0 +1,9 @@
+<h2>{{titulo}}</h2>
+<ul>
+    {{#each category}}
+    <li> {{name}}
+        <form action="/api/category/delete/{{_id}}?_method=delete" method="post">
+        <button type="submit">Eliminar</button></form>
+    </li>
+    {{/each}}
+</ul>

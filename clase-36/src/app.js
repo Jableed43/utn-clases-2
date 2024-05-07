@@ -8,6 +8,7 @@ import categoryRoute from "./routes/categoryRoute.js";
 import { engine } from "express-handlebars";
 import methodOverride from "method-override";
 import session from "express-session";
+import { loginView } from "./controllers/userController.js";
 
 const app = express();
 app.use(bodyParser.json());
@@ -21,6 +22,16 @@ app.use(
   })
 );
 
+import Handlebars from "handlebars";
+
+Handlebars.registerHelper("eq", function (a, b, options) {
+  if (a === b) {
+    return options.fn(this);
+  } else {
+    return options.inverse(this);
+  }
+});
+
 //Template engine
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
@@ -31,9 +42,7 @@ connectDB();
 
 // Rutas de la aplicación
 //ruta base
-app.get("/", (req, res) => {
-  res.render("home");
-});
+app.get("/", loginView);
 
 //rutas de usuario
 app.use("/api/user", userRoute);

@@ -2,8 +2,8 @@ import Category from "../models/categoryModel.js";
 
 export const getAll = async (req, res) => {
   try {
-    const categories = await Category.find();
-    res.status(200).json(categories);
+    const category = await Category.find().lean();
+    res.render("category/getAllCategory", { category });
   } catch (error) {
     res.status(500).json({ message: "Internal server error", error });
   }
@@ -17,9 +17,27 @@ export const create = async (req, res) => {
     } else {
       const newCategory = new Category({ name: req.body.name });
       const response = await newCategory.save();
-      res.status(201).json(response);
+      res.redirect("/api/category/getAll");
     }
   } catch (error) {
     res.status(500).json({ message: "Internal server error", error });
   }
+};
+
+export const deleteCategory = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const categoryExist = await Category.findOne({ _id: id });
+    if (!categoryExist) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    await Category.findByIdAndDelete(id);
+    res.redirect("/api/category/getAll");
+  } catch (error) {
+    res.status(500).json({ message: "internal server error", error });
+  }
+};
+
+export const createView = (req, res) => {
+  res.render("category/createCategory");
 };
