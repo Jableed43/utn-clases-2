@@ -71,7 +71,11 @@ export const updateView = async (req, res) => {
     if (!productExist) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.render("product/updateProduct", { product: productExist });
+    const productCategoryId = productExist.category.toString();
+    res.render("product/updateProduct", {
+      product: productExist,
+      productCategoryId,
+    });
   } catch (error) {
     res.status(500).json({ message: "internal server error", error });
   }

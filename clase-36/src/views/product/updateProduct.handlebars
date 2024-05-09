@@ -14,26 +14,29 @@
 <br>
 <label for="status">Estado</label>
 <select name="status" id="status">
-    <option value="{{product.status}}" disabled selected>{{product.status}}</option>
-    <option value="AVAILABLE">Disponible</option>
-    <option value="NOT AVAILABLE">No disponible</option>
-    <option value="DISCONTINUED">Discontinuado</option>
+    <option value="" disabled selected>Seleccionar</option>
+    <option value="AVAILABLE" {{#eq product.status "AVAILABLE"}} selected {{/eq}}>Disponible</option>
+    <option value="NOT AVAILABLE" {{#eq product.status "NOT AVAILABLE"}} selected {{/eq}}>No disponible</option>
+    <option value="DISCONTINUED" {{#eq product.status "DISCONTINUED"}} selected {{/eq}} >Discontinuado</option>
 </select>
 <br>
 <label for="category">Categoria</label>
 <select name="category" id="category">
-    <option value="{{product.category}}" disabled selected>{{product.category}}</option>
-    <option value="662aaa37a20d90ca19063432">Zapatillas</option>
-    <option value="662aaa48a20d90ca19063436">Pantalon de vestir</option>
-    <option value="662aaa4fa20d90ca19063438">Short de baño</option>
-    <option value="662aaea21758cd51c79d35f8">Auto</option>
+    <option value="" disabled selected>Seleccionar</option>
+    <option value="662aaa37a20d90ca19063432" {{#eq productCategoryId "662aaa37a20d90ca19063432"}} selected {{/eq}} >Zapatillas</option>
+    <option value="662aaa48a20d90ca19063436" {{#eq productCategoryId "662aaa48a20d90ca19063436"}} selected {{/eq}}>Pantalon de vestir</option>
+    <option value="662aaa4fa20d90ca19063438" {{#eq productCategoryId "662aaa4fa20d90ca19063438"}} selected {{/eq}}>Short de baño</option>
+    <option value="662aaf30aa3f6febd3efdae8" {{#eq productCategoryId "662aaf30aa3f6febd3efdae8"}} selected {{/eq}}>Auto</option>
+    <option value="662aaa3fa20d90ca19063434" {{#eq productCategoryId "662aaa3fa20d90ca19063434"}} selected {{/eq}}>zapatos</option>
+    <option value="662aaa55a20d90ca1906343a" {{#eq productCategoryId "662aaa55a20d90ca1906343a"}} selected {{/eq}}>sudadera</option>
+    <option value="66314dd9cbaa985229523022" {{#eq productCategoryId "66314dd9cbaa985229523022"}} selected {{/eq}}>casaca deportiva</option>
 </select>
 <br>
 <label for="destacado">Destacado</label>
 <select name="destacado" id="destacado" >
-    <option value="{{product.destacado}}" disabled selected>{{product.destacado}}</option>
-    <option value='true'>Destacado</option>
-    <option value='false'>No destacado</option>
+    <option value="" disabled selected>Seleccionar</option>
+    <option value='true' {{#eq product.destacado true}} selected {{/eq}}>Destacado</option>
+    <option value='false' {{#eq product.destacado false}} selected {{/eq}}>No destacado</option>
 </select>
 <br>
 <button type="submit">Enviar</button>
