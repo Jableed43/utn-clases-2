@@ -25,6 +25,10 @@ app.use(
 import Handlebars from "handlebars";
 
 Handlebars.registerHelper("eq", function (a, b, options) {
+  if (arguments.length !== 3) {
+    throw new Error("eq helper requires exactly two arguments");
+  }
+
   if (a === b) {
     return options.fn(this);
   } else {

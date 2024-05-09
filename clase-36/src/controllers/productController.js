@@ -67,11 +67,17 @@ export const update = async (req, res) => {
 export const updateView = async (req, res) => {
   try {
     const id = req.params.id;
-    const productExist = await Product.findOne({ _id: id }).lean();
-    if (!productExist) {
+    const product = await Product.findOne({ _id: id }).lean();
+    if (!product) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.render("product/updateProduct", { product: productExist });
+    console.log(product.category.toString());
+    const productCatId = product.category.toString();
+    console.log({ productCatId });
+    res.render("product/updateProduct", {
+      product,
+      productCatId,
+    });
   } catch (error) {
     res.status(500).json({ message: "internal server error", error });
   }
