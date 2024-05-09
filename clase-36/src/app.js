@@ -9,8 +9,16 @@ import { engine } from "express-handlebars";
 import methodOverride from "method-override";
 import session from "express-session";
 import { loginView } from "./controllers/userController.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+import { errorHandler } from "./middlewares/errorHandlerMiddleware.js";
 
 const app = express();
+//middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
@@ -21,6 +29,9 @@ app.use(
     saveUninitialized: false, // evita que se guarde una sesion no inicializada
   })
 );
+app.use(errorHandler);
+//ruta estatica images
+app.use("/images", express.static(path.join(__dirname, "/public/images")));
 
 import Handlebars from "handlebars";
 

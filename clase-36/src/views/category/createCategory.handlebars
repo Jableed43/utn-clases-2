@@ -1,3 +1,7 @@
+{{#if message}}
+{{message}}
+        <button onclick="goBack()">Volver</button>
+{{else}}
 <h2>Create Category</h2>
 <form action="/api/category/create" method="post">
 <label for="name">Name</label>
@@ -5,3 +9,11 @@
 <br>
 <button type="submit">Enviar</button>
 </form>
+{{/if}}
+
+
+<script>
+    function goBack(){
+        window.history.back()
+    }
+</script>

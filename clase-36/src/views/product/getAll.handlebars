@@ -1,5 +1,9 @@
 <h2>{{titulo}}</h2>
 </form>
+    {{#if message}}
+        <p>{{message}}</p>
+        <a href="http://localhost:3000/api/product/create">Crear Producto</a>
+    {{else}}
 <ul>
     {{#each products}}
     <li> {{name}} - {{price}} - {{quantity}} - {{status}} - {{categoryName}} - {{description}} - 
@@ -16,4 +20,6 @@
         <button type="submit">Eliminar</button></form>
     </li>
     {{/each}}
+    <a href="http://localhost:3000/api/product/create">Crear Producto</a>
 </ul>
+    {{/if}}

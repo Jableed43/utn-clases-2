@@ -9,8 +9,8 @@ import { verifyTokenMiddleware } from "../middlewares/verifyTokenMiddleware.js";
 
 const categoryRoute = Router();
 
-categoryRoute.post("/create", create);
-categoryRoute.delete("/delete/:id", deleteCategory);
+categoryRoute.post("/create", verifyTokenMiddleware, create);
+categoryRoute.delete("/delete/:id", verifyTokenMiddleware, deleteCategory);
 
 // views
 categoryRoute.get("/getAll", getAll);

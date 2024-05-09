@@ -11,15 +11,15 @@ export const create = async (req, res) => {
     const { email } = userData;
     const userExist = await User.findOne({ email });
     if (userExist) {
-      return res
-        .status(400)
-        .json({ message: `User with email: ${email} already exist` });
+      return res.render("create", {
+        message: `El email: ${email} ya está en uso`,
+      });
     }
     // guardar el usuario
     await userData.save();
     res.render("home");
   } catch (error) {
-    res.status(500).json({ message: "internal server error", error });
+    res.status(500).render("500", { message: "internal server error" });
   }
 };
 
@@ -28,11 +28,11 @@ export const get = async (req, res) => {
     //user.find trae un mongoose document, con lean se pasa a objeto
     const users = await User.find().lean();
     if (users.length === 0) {
-      return res.status(404).json({ message: "There are no users" });
+      return res.render("getAll", { message: "No hay usuarios" });
     }
     res.render("getAll", { users: users, titulo: "Todos los usuarios" });
   } catch (error) {
-    res.status(500).json({ error: "internal server error" });
+    res.status(500).render("500", { message: "internal server error" });
   }
 };
 
@@ -52,17 +52,13 @@ export const update = async (req, res) => {
     });
     res.redirect("/api/user/getAll");
   } catch (error) {
-    res.status(500).json({ error: "internal server error" });
+    res.status(500).render("500", { message: "internal server error" });
   }
 };
 
 export const deleteUser = async (req, res) => {
   try {
     const _id = req.params.id;
-    const userExist = await User.findOne({ _id });
-    if (!userExist) {
-      return res.status(404).json({ message: "User not found" });
-    }
     await User.findByIdAndDelete(_id);
     res.redirect("/api/user/getAll");
   } catch (error) {
@@ -92,13 +88,13 @@ export const validate = async (req, res) => {
       console.log(req.session.token);
       res.redirect("/api/user/getAll");
     } else {
-      res
-        .status(400)
-        .json({ message: "El email y/o contraseña son incorrectos" });
+      res.render("login", {
+        message: "El email y/o contraseña son incorrectos",
+      });
       return;
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).render("500", { message: "internal server error" });
   }
 };
 
@@ -106,12 +102,9 @@ export const updateView = async (req, res) => {
   try {
     const _id = req.params.id;
     const userFound = await User.findOne({ _id }).lean();
-    if (!userFound) {
-      console.log("error");
-    }
     res.render("update", { user: userFound });
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).render("500", { message: "internal server error" });
   }
 };
 
@@ -122,8 +115,12 @@ export const loginView = (req, res) => {
 export const destroySession = (req, res) => {
   req.session.destroy(error => {
     if (error) {
-      console.log("error al destruir sesion");
+      res.render("getAll", { message: "error al destruir sesion" });
     }
     res.redirect("/api/user/login");
   });
+};
+
+export const createView = (req, res) => {
+  res.render("create");
 };

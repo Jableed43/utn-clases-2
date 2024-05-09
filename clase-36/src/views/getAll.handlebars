@@ -1,3 +1,6 @@
+{{#if message}}
+{{message}}
+{{else}}
 <h2>{{titulo}}</h2>
 <form action="/api/user/logout" method="post">
 <button type="submit">Cerrar sesion</button>
@@ -13,3 +16,4 @@
     </li>
     {{/each}}
 </ul>
+{{/if}}

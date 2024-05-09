@@ -1,10 +1,14 @@
+{{#if message}}
+{{message}}
+{{else}}
 <h2>Iniciar sesion</h2>
 <form action="/api/user/login" method="post">
     <label for="email">Email</label>
     <input type="text" name="email" id="email" required>
-
+    <br>
     <label for="password">Password</label>
     <input type="password" name="password" id="password" required>
-
+    <br>
     <button type="submit">Ingresar</button>
 </form>
+{{/if}}

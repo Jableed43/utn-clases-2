@@ -1,3 +1,7 @@
+{{#if message}}
+{{message}}
+        <button onclick="goBack()">Volver</button>
+{{else}}
 <h2>{{titulo}}</h2>
 <ul>
     {{#each category}}
@@ -7,3 +11,10 @@
     </li>
     {{/each}}
 </ul>
+{{/if}}
+
+<script>
+    function goBack(){
+        window.history.back()
+    }
+</script>

@@ -4,7 +4,7 @@ export const getAll = async (req, res) => {
   try {
     const products = await Product.find().populate("category").lean();
     if (products.length === 0) {
-      return res.status(404).json({ message: "There are no products" });
+      return res.render("product/getAll", { message: "No existen productos" });
     }
     const productsWithCategory = products.map(product => ({
       ...product,
@@ -12,26 +12,27 @@ export const getAll = async (req, res) => {
     }));
     res.render("product/getAll", { products: productsWithCategory });
   } catch (error) {
-    res.status(500).json({ message: "internal server error", error });
+    res.status(500).render("500", { message: "internal server error" });
   }
 };
 
 export const create = async (req, res) => {
   try {
     let destacado = req.body.destacado;
-    console.log(destacado);
     destacado = destacado === "true";
     const productDestacado = { destacado, ...req.body };
     const productData = new Product(productDestacado);
     const { name } = productData;
     const productExist = await Product.findOne({ name });
     if (productExist) {
-      return res.status(400).json({ message: `Product ${name} already exist` });
+      return res.render("product/createProduct", {
+        message: `El producto con el nombre ${name} ya existe`,
+      });
     }
-    const savedProduct = await productData.save();
+    await productData.save();
     res.redirect("/api/product/getAll");
   } catch (error) {
-    res.status(500).json({ message: "internal server error", error });
+    res.status(500).render("500", { message: "internal server error" });
   }
 };
 
@@ -46,7 +47,7 @@ export const findOne = async (req, res) => {
     }
     res.status(200).json(productExist);
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error });
+    res.status(500).render("500", { message: "internal server error" });
   }
 };
 
@@ -60,7 +61,7 @@ export const update = async (req, res) => {
     await Product.findByIdAndUpdate({ _id: id }, req.body, { new: true });
     res.redirect("/api/product/getAll");
   } catch (error) {
-    res.status(500).json({ message: "internal server error", error });
+    res.status(500).render("500", { message: "internal server error" });
   }
 };
 
@@ -77,21 +78,17 @@ export const updateView = async (req, res) => {
       productCategoryId,
     });
   } catch (error) {
-    res.status(500).json({ message: "internal server error", error });
+    res.status(500).render("500", { message: "internal server error" });
   }
 };
 
 export const deleteProduct = async (req, res) => {
   try {
     const id = req.params.id;
-    const productExist = await Product.findOne({ _id: id });
-    if (!productExist) {
-      return res.status(404).json({ message: "Product not found" });
-    }
     await Product.findByIdAndDelete(id);
     res.redirect("/api/product/getAll");
   } catch (error) {
-    res.status(500).json({ message: "internal server error", error });
+    res.status(500).render("500", { message: "internal server error" });
   }
 };
 

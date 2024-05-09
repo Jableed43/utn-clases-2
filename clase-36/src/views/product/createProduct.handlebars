@@ -1,3 +1,8 @@
+    {{#if message}}
+        <p>{{message}}</p>
+        <button onclick="goBack()">Volver</button>
+    {{else}}
+    
 <h2>Create Product</h2>
 <form action="/api/product/create" method="post">
 <label for="name">Nombre del producto</label>
@@ -39,3 +44,11 @@
 <button type="submit">Enviar</button>
 <button type="reset">Resetear</button>
 </form>
+    <a href="http://localhost:3000/api/product/getAll">Productos</a>
+{{/if}}
+
+<script>
+    function goBack(){
+        window.history.back()
+    }
+</script>

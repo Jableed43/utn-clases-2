@@ -1,3 +1,6 @@
+{{#if message}}
+{{message}}
+{{else}}
 <h2>Create User</h2>
 <form action="/api/user/create" method="post">
 <label for="nombre">Nombre</label>
@@ -20,3 +23,4 @@
 <br>
 <button type="submit">Enviar</button>
 </form>
+{{/if}}
